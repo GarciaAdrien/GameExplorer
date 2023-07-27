@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="textViewGameName" type="id" />
+    <item name="buttonSearch" type="id" />
+    <item name="recyclerViewGames" type="id" />
+    <item name="imageViewBackground" type="id" />
+    <item name="textViewReleased" type="id" />
+    <item name="textViewPlatforms" type="id" />
+</resources>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@color/darkBackground"
+    android:elevation="4dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/darkBackground">
+        <ImageView
+            android:id="@+id/imageViewBackground"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/game_details_background"/> <!-- Remplacez "game_details_background" par le nom de votre image de fond -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#80000000"/>
+        <TextView
+            android:id="@+id/textViewGameName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:textColor="@android:color/white" />
+
+
+        <TextView
+            android:id="@+id/textViewPlatforms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:padding="8dp"
+            android:textColor="@android:color/white" />
+
+
+        <TextView
+            android:id="@+id/textViewReleased"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:padding="8dp"
+            android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/buttonAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Voir +"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_margin="16dp"
+            android:textColor="@android:color/white"
+            android:background="@color/grey" /> <!-- Utilisez un drawable personnalisé pour styliser le bouton -->
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
