@@ -6,4 +6,7 @@
     <item name="imageViewBackground" type="id" />
     <item name="textViewReleased" type="id" />
     <item name="textViewPlatforms" type="id" />
+    <item name="textViewGameVideo" type="id" />
+    <item name="imageViewPreview" type="id" />
+    <item name="textViewNoVideos" type="id" />
 </resources>

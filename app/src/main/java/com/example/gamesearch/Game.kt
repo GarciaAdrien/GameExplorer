@@ -20,7 +20,6 @@ data class Game(
  val ratings: List<Rating>,
  val platforms: List<Platform>,
  val games_count: Int,
- // Add other fields as needed
 )
 
 data class Rating(

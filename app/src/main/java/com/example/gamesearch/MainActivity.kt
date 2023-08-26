@@ -2,8 +2,14 @@ package com.example.gamesearch
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,14 +23,53 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
 
     private val gameList: MutableList<Game> = mutableListOf()
-
     private lateinit var gameApiService: GameApiService
     private var gameAdapter: GameAdapter? = null
-
+    private var isFetchingData = false
+    private lateinit var editTextSearch: EditText
+    private var originalGameList: List<Game> = emptyList()
+    private var preloadedGameList: List<Game> = emptyList()
+    private lateinit var buttonSearch2: Button // Ajout de la variable
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val recyclerViewGames = findViewById<RecyclerView>(R.id.recyclerViewGames)
+        progressBar = findViewById(R.id.progressBar)
+        editTextSearch = findViewById(R.id.editTextSearch)
+        buttonSearch2 = findViewById(R.id.buttonSearch2) // Initialisation de la variable
+
+        val buttonSearch = findViewById<Button>(R.id.buttonSearch)
+        // Dans la fonction onCreate
+        buttonSearch.setOnClickListener {
+            val searchText = editTextSearch.text.toString().trim()
+            if (searchText.isNotEmpty()) {
+                val filteredGames = originalGameList.filter { it.name.contains(searchText, true) }
+                if (filteredGames.isNotEmpty()) {
+                    gameAdapter?.updateData(filteredGames)
+                } else {
+                    Toast.makeText(this, "Aucun jeu trouvé.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // If the search text is empty, reset the list to the original
+                gameAdapter?.updateData(originalGameList)
+            }
+
+            if (gameList.isEmpty() && !isFetchingData) {
+                isFetchingData = true
+                progressBar.visibility = View.VISIBLE // Afficher la ProgressBar
+                GlobalScope.launch(Dispatchers.Main) {
+                    fetchAllGames()
+                    isFetchingData = false
+                    editTextSearch.visibility = View.VISIBLE // Affiche la barre de recherche
+                    progressBar.visibility = View.GONE // Masquer la ProgressBar après le chargement
+                }
+            } else if (gameList.isNotEmpty()) {
+                Toast.makeText(this, "La liste des jeux a bien été chargée", Toast.LENGTH_SHORT).show()
+                editTextSearch.visibility = View.VISIBLE // Affiche la barre de recherche
+            }
+        }
+
 
         // Initialize Retrofit
         val retrofit = Retrofit.Builder()
@@ -40,17 +85,37 @@ class MainActivity : AppCompatActivity() {
         recyclerViewGames.layoutManager = LinearLayoutManager(this)
         recyclerViewGames.adapter = gameAdapter
 
-        val buttonSearch = findViewById<Button>(R.id.buttonSearch)
-        buttonSearch.setOnClickListener {
-            // Call the API when the button is clicked
-            GlobalScope.launch(Dispatchers.Main) {
-                fetchAllGames()
+        buttonSearch2.setOnClickListener {
+            val searchText = editTextSearch.text.toString().trim()
+            if (searchText.isNotEmpty()) {
+                val filteredGames = preloadedGameList.filter { it.name.contains(searchText, true) }
+                if (filteredGames.isNotEmpty()) {
+                    gameAdapter?.updateData(filteredGames)
+                } else {
+                    Toast.makeText(this, "Aucun jeu trouvé.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                gameAdapter?.updateData(preloadedGameList)
             }
         }
+
+        // Mise en place du TextWatcher pour la recherche en temps réel
+        editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val searchText = s.toString().trim()
+                val filteredGames = preloadedGameList.filter { it.name.contains(searchText, true) }
+                gameAdapter?.updateData(filteredGames)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
     }
 
     private suspend fun fetchAllGames() {
-        val totalPageCount = 5 // Set this to an appropriate value based on the total number of pages available
+        val totalPageCount = 20
 
         for (page in 1..totalPageCount) {
             try {
@@ -59,25 +124,19 @@ class MainActivity : AppCompatActivity() {
                     val gameListResponse = gameResponse.body()
                     if (gameListResponse != null) {
                         val gamesForPlatform = gameListResponse.results
-                        // Add games to the main gameList
                         gameList.addAll(gamesForPlatform)
                     }
                 } else {
-                    // Log error message for debugging
                     Log.e("API Error", gameResponse.message())
                 }
             } catch (e: Exception) {
-                // Log exception for debugging
                 Log.e("Exception", e.message ?: "Unknown error")
             }
         }
 
-        // Sort the gameList by game names (ascending order)
         gameList.sortBy { it.name }
-
-        // Update the adapter data with the new games
+        originalGameList = gameList.toList()
+        preloadedGameList = gameList.toList()
         gameAdapter?.updateData(gameList)
     }
-
 }
-

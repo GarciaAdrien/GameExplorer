@@ -1,0 +1,12 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:left="2dp" android:top="2dp" android:right="2dp"> <!-- Ajoutez un espace de 2dp sur les côtés et le haut -->
+        <shape>
+            <stroke android:width="2dp" android:color="#FF6200EE" /> <!-- Définit la bordure violette avec une épaisseur de 2dp -->
+        </shape>
+    </item>
+    <item android:bottom="0dp"> <!-- Enlève le bord en bas en définissant une valeur de 0dp -->
+        <shape>
+            <solid android:color="@android:color/transparent" /> <!-- Définit la couleur de remplissage du bord inférieur transparent -->
+        </shape>
+    </item>
+</layer-list>

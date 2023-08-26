@@ -11,5 +11,7 @@
     <color name="gamesAccent">#FF6D00</color>
     <color name="gamesBackground">#1A1A1A</color>
     <color name="darkBackground">#30302f</color>
-
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 </resources>
